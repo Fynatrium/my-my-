@@ -22,7 +22,6 @@ from . import account_panel
 from . import often_panel
 from . import global_panel
 from . import cabinet_panel
-from . import hardware_panel
 from . import report_production_panel
 from . import product_library_panel
 from . import backend_panel
@@ -37,7 +36,6 @@ def register():
     often_panel.register()
     global_panel.register()
     cabinet_panel.register()
-    hardware_panel.register()
     report_production_panel.register()
     product_library_panel.register()
     backend_panel.register()
@@ -47,7 +45,6 @@ def unregister():
     backend_panel.unregister()
     product_library_panel.unregister()
     report_production_panel.unregister()
-    hardware_panel.unregister()
     cabinet_panel.unregister()
     scene_panel.unregister()
     global_panel.unregister()
