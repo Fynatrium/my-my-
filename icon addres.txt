@@ -1,0 +1,138 @@
+icons/
+├── account/
+│   ├── profile.png
+│   ├── license.png
+│   └── support.png
+├── global/
+│   └── global_settings_and_pricing/
+│       ├── system_settings.png
+│       ├── global_parameters.png
+│       ├── quotation_management.png
+│       └── control.png
+├── scene/
+│   ├── house_type_modeling/
+│   │   ├── draw_wall.png
+│   │   ├── edit_wall.png
+│   │   ├── insert_window.png
+│   │   ├── insert_door.png
+│   │   ├── wall_marking.png
+│   │   ├── arrange_switches.png
+│   │   ├── create_ground.png
+│   │   └── create_ceiling.png
+│   ├── kitchen_countertop/
+│   │   ├── draw_tabletop.png
+│   │   └── place_sink.png
+│   └── accessory_model/
+│       └── wooden_model.png
+├── cabinet/
+│   ├── start_design/
+│   │   ├── smart_box.png
+│   │   ├── pick_interior.png
+│   │   ├── pick_face.png
+│   │   ├── quick_add_board.png
+│   │   ├── draw_custom_board.png
+│   │   ├── space_split.png
+│   │   ├── create_dimension_driven_parameters.png
+│   │   └── model_outline.png
+│   ├── cabinet_tools/
+│   │   ├── 2d_to_3d.png
+│   │   ├── product_library.png
+│   │   ├── cabinet_generator.png
+│   │   └── csv_to_door_panel.png
+│   ├── edit_tools/
+│   │   ├── adjust_board.png
+│   │   ├── super_push_pull.png
+│   │   ├── point_range_stretch.png
+│   │   ├── set_ab.png
+│   │   ├── mirror_cabinet.png
+│   │   ├── split_back_panel.png
+│   │   ├── cabinet_corner_cut.png
+│   │   ├── board_split.png
+│   │   ├── rotate_texture.png
+│   │   ├── material_eyedropper.png
+│   │   ├── 45_degree_chamfer.png
+│   │   ├── growth_animation.png
+│   │   ├── clean_scene.png
+│   │   ├── clean_unused_data.png
+│   │   └── set_square_data.png
+│   ├── door_panel_drawer_tools/
+│   │   ├── face_to_door_panel.png
+│   │   ├── hide_show.png
+│   │   └── install_handle.png
+│   │   └── interactive_animation.png 
+│   ├── annotation_editing/
+│   │   ├── quick_annotation.png
+│   │   ├── delete_annotation.png
+│   │   ├── quick_set_external_data.png
+│   │   ├── set_live_layer.png
+│   │   ├── auto_numbering.png
+│   │   ├── set_one_sided.png
+│   │   ├── sorting_code_setting.png
+│   │   └── panel_pattern_matching.png
+│   └── output_tools/
+│       ├── export_drawings.png
+│       └── upload_installation_drawing.png
+├── hardware_craftsmanship/
+│   └── hardware_craftsmanship/
+│       ├── create_all_hardware.png
+│       ├── create_select_hardware.png
+│       └── delete_selected_hardware.png
+├── report_production/
+│   ├── report_management/
+│   │   ├── intelligent_detection.png
+│   │   └── order_management.png
+│   ├── project_installation/
+│   │   ├── project_management.png
+│   │   └── installation_diagram.png
+│   └── production_management/
+│       ├── create_production.png
+│       ├── quick_patch.png
+│       └── production_scheduling_system.png
+├── product_library/
+│   ├── product_catalog_management/
+│   │   ├── panel_management.png
+│   │   ├── cabinet_management.png
+│   │   ├── door_panel_management.png
+│   │   ├── section_management.png
+│   │   ├── user_gallery.png
+│   │   └── component_management.png
+│   ├── parts_materials/
+│   │   ├── parts_management.png
+│   │   └── materials_management.png
+│   └── connector_management/
+│       ├── connector_management.png
+│       └── connection_method_management.png
+└── backend/
+    ├── cnc_drill_export_management/
+    │   ├── alpha_csv_export.png
+    │   ├── kdt_export_settings.png
+    │   ├── banxd_export_settings.png
+    │   ├── mpr_export_settings.png
+    │   ├── export_csv.png
+    │   ├── export_side_groove_side_hole.png
+    │   ├── export_side_hole.png
+    │   ├── exporting_prescription_data.png
+    │   ├── bpp_export_data_settings.png
+    │   ├── cix_export_settings.png
+    │   ├── electronic_saw_csv_data.png
+    │   ├── haode_5_sided_diamond_format_converter.png
+    │   ├── hausel_ptp.png
+    │   ├── hausel_ptp_1.png
+    │   ├── log_parser_settings.png
+    │   ├── mortise_and_tenon_output_settings.png
+    │   ├── mortise_and_tenon_side_holes.png
+    │   ├── ptp_export_settings.png
+    │   ├── scm_data_export_settings.png
+    │   ├── starry_six_sided_diamond_export_settings.png
+    │   ├── xianda_six_sided_drill.png
+    │   └── xiaofeng_data_export_settings.png
+    ├── third_party_software_extensions/
+    │   ├── connection_management_j.png
+    │   ├── exporting_dxf_from_patch.png
+    │   ├── import_kujiale_data.png
+    │   ├── kujiale_v2.png
+    │   ├── open_erp.png
+    │   ├── open_erp_browser_version.png
+    │   └── smart_manufacturing_parser.png
+    └── interconnection_expansion/
+        └── la_hole_measurement_post_processing.png
