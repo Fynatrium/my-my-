@@ -4,7 +4,6 @@ import bpy.utils.previews
 
 preview_collections = {}
 
-
 def load_icons():
     pcoll = bpy.utils.previews.new()
     try:
@@ -28,12 +27,22 @@ def load_icons():
                 pcoll.load(name, fp, 'IMAGE')
     preview_collections["scene"] = pcoll
 
-
 def get_icon_id(name):
     pcoll = preview_collections.get("scene")
     if pcoll and name in pcoll:
         return pcoll[name].icon_id
     return 0
+
+
+class CABINET_OT_activate_draw_wall(bpy.types.Operator):
+    bl_idname = "cabinet.activate_draw_wall"
+    bl_label = "Draw Wall"
+    bl_description = "Activate Draw Wall tool"
+    bl_options = {'REGISTER'}
+    
+    def execute(self, context):
+        context.scene.cabinet_active_tool = 'DRAW_WALL'
+        return {'FINISHED'}
 
 
 class VIEW3D_PT_cabinet_scene(bpy.types.Panel):
@@ -47,11 +56,10 @@ class VIEW3D_PT_cabinet_scene(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-
         box = layout.box()
         box.label(text="House Type Modeling", icon='NONE')
         col = box.column(align=True)
-        col.operator("cabinet.draw_wall", text="Draw Wall", icon='NONE', icon_value=get_icon_id("draw_wall"))
+        col.operator("cabinet.activate_draw_wall", text="Draw Wall", icon='NONE', icon_value=get_icon_id("draw_wall"))
         col.operator("cabinet.edit_wall", text="Edit Wall", icon='NONE', icon_value=get_icon_id("edit_wall"))
         col.operator("cabinet.insert_window", text="Insert Window", icon='NONE', icon_value=get_icon_id("insert_window"))
         col.operator("cabinet.insert_door", text="Insert Door", icon='NONE', icon_value=get_icon_id("insert_door"))
@@ -73,6 +81,7 @@ class VIEW3D_PT_cabinet_scene(bpy.types.Panel):
 
 
 classes = [
+    CABINET_OT_activate_draw_wall,
     VIEW3D_PT_cabinet_scene,
 ]
 
@@ -89,7 +98,7 @@ def unregister():
     pcoll = preview_collections.get("scene")
     if pcoll:
         bpy.utils.previews.remove(pcoll)
-        preview_collections.clear()
+    preview_collections.clear()
 
 
 if __name__ == "__main__":
