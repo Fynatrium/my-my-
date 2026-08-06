@@ -7,12 +7,8 @@ from bpy_extras import view3d_utils
 import blf
 
 
-# =============================================================================
-# MATH HELPERS
-# =============================================================================
 def cross2d(a: Vector, b: Vector) -> float:
     return a.x * b.y - a.y * b.x
-
 
 def get_mouse_3d_on_grid(context, event, z=0.0):
     region = context.region
@@ -25,7 +21,6 @@ def get_mouse_3d_on_grid(context, event, z=0.0):
     t = (z - origin.z) / direction.z
     hit = origin + direction * t
     return hit
-
 
 def snap_mouse(last, current, mode='ORTHO', angle_step=90.0, grid_size=0.1):
     delta = current - last
@@ -50,7 +45,6 @@ def snap_mouse(last, current, mode='ORTHO', angle_step=90.0, grid_size=0.1):
         ))
     else:
         return Vector((current.x, current.y, 0.0))
-
 
 def build_wall_geometry(points, thickness, height, bottom_offset=0.0, top_offset=0.0):
     n = len(points)
@@ -130,7 +124,6 @@ def build_wall_geometry(points, thickness, height, bottom_offset=0.0, top_offset
 
     return verts, faces
 
-
 def draw_dashed_line_2d(start_2d, end_2d, color, dash_len=8, gap_len=4):
     if not start_2d or not end_2d:
         return
@@ -156,9 +149,6 @@ def draw_dashed_line_2d(start_2d, end_2d, color, dash_len=8, gap_len=4):
         batch.draw(shader)
 
 
-# =============================================================================
-# MODAL OPERATOR
-# =============================================================================
 class CABINET_OT_draw_wall(bpy.types.Operator):
     bl_idname = "cabinet.draw_wall"
     bl_label = "Draw Wall"
@@ -179,14 +169,19 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
         return context.mode == 'OBJECT'
 
     def invoke(self, context, event):
+        settings = context.scene.cabinet_tool_settings
+        settings.is_drawing = True
+        
         try:
             context.scene.cabinet_active_tool = 'DRAW_WALL'
         except AttributeError:
             pass
+        
         mesh = bpy.data.meshes.new("Wall")
         self.wall_obj = bpy.data.objects.new("Wall", mesh)
         context.collection.objects.link(self.wall_obj)
         context.view_layer.objects.active = self.wall_obj
+        
         args = (context,)
         self.draw_handle = bpy.types.SpaceView3D.draw_handler_add(
             self.draw_callback, args, 'WINDOW', 'POST_PIXEL'
@@ -229,7 +224,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                 self.points.append(snapped)
                 return {'RUNNING_MODAL'}
 
-            # Close loop detection
             if len(self.points) >= 3 and self.is_close_loop:
                 self.points.append(self.points[0].copy())
                 self.finish(context, cancelled=False)
@@ -251,7 +245,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
         last = self.points[-1]
         self.is_close_loop = False
 
-        # --- Close Loop Snap ---
         if len(self.points) >= 3:
             first = self.points[0]
             dist_to_first = (raw - first).length
@@ -259,7 +252,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                 self.is_close_loop = True
                 return first.copy()
 
-        # --- Collinear Snap (Revit extension line) ---
         if len(self.points) >= 2 and settings.wall_snap_mode == 'NONE':
             for i in range(len(self.points) - 1):
                 p1 = self.points[i]
@@ -274,9 +266,8 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                     proj = p1 + seg_dir * proj_dist
                     return Vector((proj.x, proj.y, 0.0))
 
-        # --- Standard Snap Modes ---
         mode = settings.wall_snap_mode
-        if mode == 'NONE':
+        if mode == 'NONE' or mode == 'FREE':
             return raw
         elif mode == 'GRID':
             return snap_mouse(last, raw, 'GRID', grid_size=settings.wall_grid_size)
@@ -312,7 +303,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
         region = context.region
         rv3d = context.space_data.region_3d
 
-        # --- Draw existing confirmed segments (solid green) ---
         if len(self.points) >= 2:
             verts_3d = []
             for p in self.points:
@@ -329,7 +319,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                 gpu.state.line_width_set(1.0)
                 gpu.state.blend_set('NONE')
 
-        # --- Draw preview segment ---
         if len(self.points) > 0 and self.preview_point:
             last = self.points[-1]
             last_2d = view3d_utils.location_3d_to_region_2d(region, rv3d, last)
@@ -338,7 +327,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
             if last_2d and curr_2d:
                 gpu.state.blend_set('ALPHA')
 
-                # Color: yellow if close loop, blue otherwise
                 if self.is_close_loop:
                     draw_dashed_line_2d(
                         (last_2d.x, last_2d.y),
@@ -346,7 +334,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                         (1.0, 0.9, 0.0, 0.95),
                         dash_len=6, gap_len=3
                     )
-                    # Draw "CLOSE" text
                     font_id = 0
                     blf.position(font_id, curr_2d.x + 12, curr_2d.y + 12, 0)
                     blf.size(font_id, 14)
@@ -360,7 +347,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                         dash_len=10, gap_len=5
                     )
 
-                # --- Collinear extension indicator ---
                 if len(self.points) >= 2 and not self.is_close_loop:
                     for i in range(len(self.points) - 1):
                         p1 = self.points[i]
@@ -381,7 +367,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                                     dash_len=3, gap_len=5
                                 )
 
-                # --- Dimension text ---
                 length = (self.preview_point - last).length
                 angle = degrees(atan2(
                     self.preview_point.y - last.y,
@@ -393,19 +378,17 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                 blf.position(font_id, mid_x + 10, mid_y + 10, 0)
                 blf.size(font_id, 16)
                 blf.color(font_id, 1.0, 1.0, 1.0, 1.0)
-                blf.draw(font_id, f"L: {length:.2f}m  A: {angle:.1f}\u00b0")
+                blf.draw(font_id, f"L: {length:.2f}m A: {angle:.1f}\u00b0")
 
-                gpu.state.blend_set('NONE')
+            gpu.state.blend_set('NONE')
 
     def finish(self, context, cancelled=False):
         if self.draw_handle:
             bpy.types.SpaceView3D.draw_handler_remove(self.draw_handle, 'WINDOW')
             self.draw_handle = None
 
-        try:
-            context.scene.cabinet_active_tool = 'NONE'
-        except AttributeError:
-            pass
+        settings = context.scene.cabinet_tool_settings
+        settings.is_drawing = False
 
         if cancelled:
             if self.wall_obj:
@@ -424,7 +407,6 @@ class CABINET_OT_draw_wall(bpy.types.Operator):
                     self.wall_obj = None
             else:
                 settings = context.scene.cabinet_tool_settings
-                # IMPORTANT: use only self.points, NOT preview_point
                 verts, faces = build_wall_geometry(
                     self.points,
                     settings.wall_thickness,
